@@ -105,56 +105,26 @@
             var westLon = 0;
 
             if (document.getElementById("west1").checked == true) {
-                westTitle = "Seattle";
-                westLat = 47.60357;
-                westLon = -122.32945;
-            } else
-
-                if (document.getElementById("west2").checked == true) {
-                    westTitle = "Portland";
-                    westLat = 45.5051;
-                    westLon = -122.6750;
-                } else
-
-                    if (document.getElementById("west3").checked == true) {
-                        westTitle = "San Francisco";
-                        westLat = 37.7749;
-                        westLon = -122.4194;
-                    }
+                westTitle = "Fujitsu Uvance Kawasaki Tower";
+                westLat = 35.5303621;
+                westLon = 139.6946989;
+            }
 
             var eastTitle = "none";
             var eastLat = 0;
             var eastLon = 0;
 
             if (document.getElementById("east1").checked == true) {
-                eastTitle = "New York";
-                eastLat = 40.7128;
-                eastLon = -74.0060;
-            } else
-
-                if (document.getElementById("east2").checked == true) {
-                    eastTitle = "Charleston";
-                    eastLat = 32.7765;
-                    eastLon = -79.9311;
-                } else
-
-                    if (document.getElementById("east3").checked == true) {
-                        eastTitle = "Miami";
-                        eastLat = 25.7617;
-                        eastLon = -80.1918;
-                    }
-
+                eastTitle = "富士通株式会社本店";
+                eastLat = 35.5831641;
+                eastLon = 139.6399113;
+            }
             // Icon options are:
             // marker-black, marker-blue, marker-darkblue, marker-red, marker-yellow,
             // pin-blue, pin-darkblue, pin-red, pin-round-blue, pin-round-darkblue, pin-round-red.
             var startPoint = new atlas.data.Feature(new atlas.data.Point([westLon, westLat]), {
                 title: westTitle,
                 icon: 'pin-round-blue'
-            });
-
-            var midPoint = new atlas.data.Feature(new atlas.data.Point([-87.6298, 41.8781]), {
-                title: 'Chicago',
-                icon: 'pin-red'
             });
 
             var endPoint = new atlas.data.Feature(new atlas.data.Point([eastLon, eastLat]), {
@@ -164,20 +134,18 @@
 
             // Add the data to the data source. This adds the pin icons.
             // The first call to datasource uses setShapes, to remove all previous route geometry.
-            datasource.setShapes([startPoint, midPoint, endPoint]);
+            datasource.setShapes([startPoint, endPoint]);
 
             // Fit the map window to the bounding box defined by the start and end positions.
             // Add more points to the bounding box data, if there are mid points in the route.
             map.setCamera({
-                bounds: atlas.data.BoundingBox.fromData([startPoint, midPoint, endPoint]),
+                bounds: atlas.data.BoundingBox.fromData([startPoint, endPoint]),
                 padding: 100
             });
 
             // Points input to the routeURL. Minimum of two (start and end points).
             var coordinates = [[startPoint.geometry.coordinates[0], startPoint.geometry.coordinates[1]]];
-            if (viaMidpoint) {
-                coordinates.push([midPoint.geometry.coordinates[0], midPoint.geometry.coordinates[1]]);
-            }
+
             coordinates.push([endPoint.geometry.coordinates[0], endPoint.geometry.coordinates[1]]);
 
             // Define an internal function to find a route, and update the UI.
@@ -222,13 +190,13 @@
 
             // Truck load types: USHazmatClass1 through 9, otherHazmatHarmfulToWater, otherHazmatGeneral, and otherHazmatExplosive.
             // Make a search route request for a truck.
-            GetRoute(20000, "truck", 3, 3, 10, document.getElementById("hazmat").value, '#2272B9', 9, 0, "truckkm", "truckh");
+            // GetRoute(20000, "truck", 3, 3, 10, document.getElementById("hazmat").value, '#2272B9', 9, 0, "truckkm", "truckh");
 
             // Make a search route request for a car.
             GetRoute(20000, "car", 2, 2, 5, null, '#B76DAB', 4, 1, "carkm", "carh");
 
             // Make a search route request for a bicycle.
-            GetRoute(20000, "bicycle", 1, 2, 2, null, '#053305', 3, 2, "bicyclekm", "bicycleh");
+            // GetRoute(20000, "bicycle", 1, 2, 2, null, '#053305', 3, 2, "bicyclekm", "bicycleh");
         }
     </script>
 
@@ -311,34 +279,19 @@
     <form>
         <table class="tclass">
             <tr>
-                <td align="center">
-                    <h3 class="whitetext">Azure Maps Cross-Country Demo</h3>
-                </td>
                 <td width="400px" align="center">
                     <table class="styled">
                         <tr>
                             <td>
                                 <input type="radio" name="rad1" id="west1" checked="checked" />
-                                <label for="west1">Seattle</label>
-                                <input type="radio" name="rad1" id="west2" />
-                                <label for="west2">Portland</label>
-                                <input type="radio" name="rad1" id="west3" />
-                                <label for="west3">San Francisco</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="checkbox" class="styledButtonS" id="viaChicago"
-                                    onclick="checkMidpoint()" />
-                                <label for="viaChicago">via Chicago</label>
+                                <label for="west1">Fujitsu Uvance Kawasaki Tower</label>
                             </td>
                         </tr>
                     </table>
                 </td>
 
                 <td width="200px" align="center">
-                    <input type="button" class="styledButtonL" value="Go..." id="go" onclick="GetMap()" />
-                    <input type="button" class="styledButtonS" value="USHazmatClass2" id="hazmat" onclick="Hazmat()" />
+                    <input type="button" class="styledButtonL" value="検索" id="go" onclick="GetMap()" />
                 </td>
 
                 <td align="center" width="400px">
@@ -346,32 +299,18 @@
                         <tr>
                             <td>
                                 <input type="radio" name="rad2" id="east1" checked="checked" />
-                                <label for="east1">New York</label>
-                                <input type="radio" name="rad2" id="east2" />
-                                <label for="east2">Charleston</label>
-                                <input type="radio" name="rad2" id="east3" />
-                                <label for="east3">Miami</label>
+                                <label for="east1">富士通株式会社本店</label>
                             </td>
                         </tr>
                     </table>
                 </td>
 
-                <td width="400px" align="center">
+                <td width="400px" align="center<YOUR AZURE MAPS PRIMARY KEY>">
                     <table class="styled">
                         <tr>
-                            <td>Truck:</td>
-                            <td id="truckkm"></td>
-                            <td id="truckh"></td>
-                        </tr>
-                        <tr>
-                            <td>Car:</td>
+                            <td>車：</td>
                             <td id="carkm"></td>
                             <td id="carh"></td>
-                        </tr>
-                        <tr>
-                            <td>Bicycle:</td>
-                            <td id="bicyclekm"></td>
-                            <td id="bicycleh"></td>
                         </tr>
                     </table>
                 </td>

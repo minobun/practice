@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Map Route</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Add references to the Azure Maps Map control JavaScript and CSS files. -->
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css">
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+
+    <!-- Add a reference to the Azure Maps Services Module JavaScript file. -->
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas-service.min.js"></script>
+
+
+    <script>
+        // Global variables.
+        var map, datasource, routeURL;
+        var viaMidpoint = false;
+
+        // Function to cycle through the hazardous material truck classes.
+        function Hazmat() {
+            var currentHazmat = document.getElementById('hazmat').value;
+            var p = currentHazmat.length;
+            var n = parseInt(currentHazmat.charAt(p - 1));
+            if (n == 9) {
+                n = 0;
+            }
+            ++n;
+            document.getElementById("hazmat").value = currentHazmat.substr(0, p - 1) + n.toString();
+        }
+
+        // Check to see if the Chicago midpoint as been selected.
+        function checkMidpoint() {
+            viaMidpoint = document.getElementById("viaChicago").checked;
+        }
+
+        // InitMap is called one time, when the <body> html is loaded.
+        function InitMap() {
+
+            // Instantiate a map object.
+            map = new atlas.Map("myMap", {
+
+                // Add your Azure Maps subscription key to the map SDK.
+                authOptions: {
+                    authType: 'subscriptionKey',
+                    subscriptionKey: '<YOUR AZURE MAPS PRIMARY KEY>'
+                }
+            });
+
+            // Use SubscriptionKeyCredential with a subscription key.
+            var subscriptionKeyCredential = new atlas.service.SubscriptionKeyCredential(atlas.getSubscriptionKey());
+
+            // Use subscriptionKeyCredential to create a pipeline.
+            var pipeline = atlas.service.MapsURL.newPipeline(subscriptionKeyCredential);
+
+            // Construct the RouteURL object.
+            routeURL = new atlas.service.RouteURL(pipeline);
+
+            // Wait until the map resources are ready before adding to them.
+            map.events.add('ready', function () {
+
+                // Create a data source and add it to the map.
+                datasource = new atlas.source.DataSource();
+                map.sources.add(datasource);
+            });
+        }
+    </script>
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #myMap {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+</head>
+
+<body onload="InitMap()">
+    <div id="myMap"></div>
+</body>
+
+</html>

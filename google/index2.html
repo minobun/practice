@@ -1,0 +1,80 @@
+<html>
+
+<head>
+    <title>Simple Map</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script>
+        let map;
+        let service;
+        let infowindow;
+
+        function initMap() {
+            infowindow = new google.maps.InfoWindow();
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 35.5303621, lng: 139.6946989 },
+                zoom: 15,
+            });
+
+            const request = {
+                // query: "川崎駅",
+                query: "Fujitsu Uvance Kawasaki Tower",
+                fields: ["name", "geometry"],
+            };
+
+            service = new google.maps.places.PlacesService(map);
+            service.findPlaceFromQuery(request, (results, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+                    for (let i = 0; i < results.length; i++) {
+                        createMarker(results[i]);
+                    }
+
+                    map.setCenter(results[0].geometry.location);
+                }
+            });
+        }
+
+        function createMarker(place) {
+            if (!place.geometry || !place.geometry.location) return;
+
+            const marker = new google.maps.Marker({
+                map,
+                position: place.geometry.location,
+            });
+
+            google.maps.event.addListener(marker, "click", () => {
+                infowindow.setContent(place.name || "");
+                infowindow.open(map);
+            });
+        }
+
+        window.initMap = initMap;
+    </script>
+    <style>
+        /* 
+     * Always set the map height explicitly to define the size of the div element
+     * that contains the map. 
+     */
+        #map {
+            height: 100%;
+        }
+
+        /* 
+     * Optional: Makes the sample page fill the window. 
+     */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=<YOUR GOOGLE MAPS API PRIMARY KEY>g&callback=initMap&libraries=places&v=weekly"
+        defer></script>
+</body>
+
+</html>
